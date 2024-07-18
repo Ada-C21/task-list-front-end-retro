@@ -1,0 +1,10 @@
+div.NavBar ul {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  padding: 0;
+}
+
+div.NavBar li {
+  margin: 1em;
+}

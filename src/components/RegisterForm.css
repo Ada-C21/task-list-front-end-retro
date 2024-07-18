@@ -1,0 +1,25 @@
+.register__form {
+  margin-top: 1em;
+  display: flex;
+  justify-content: center;
+}
+
+.register__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 400px;
+  row-gap: 20px;
+}
+
+.register__fields label {
+  font-weight: bolder;
+  font-size: 1.2em;
+}
+
+.register__submit {
+  grid-column: span 2;
+}
+
+.register__form h2 {
+  font-size: 1.5em;
+}

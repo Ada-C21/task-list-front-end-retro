@@ -1,0 +1,25 @@
+.login__form {
+  margin-top: 1em;
+  display: flex;
+  justify-content: center;
+}
+
+.login__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 400px;
+  row-gap: 20px;
+}
+
+.login__fields label {
+  font-weight: bolder;
+  font-size: 1.2em;
+}
+
+.login__submit {
+  grid-column: span 2;
+}
+
+.login__form h2 {
+  font-size: 1.5em;
+}
