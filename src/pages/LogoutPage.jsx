@@ -1,9 +1,15 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const LogoutPage = ({ onAppear }) => {
+  const timer = useRef(null);
+
   useEffect(() => {
-    setTimeout(onAppear, 1000);
+    timer.current = setTimeout(onAppear, 1000);
+
+    return () => {
+      clearTimeout(timer.current);
+    };
   }, [onAppear]);
 
   return (
