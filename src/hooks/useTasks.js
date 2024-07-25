@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-const useTasks = (api, sessionID, onUnauthorizedError) => {
+const useTasks = (api, onUnauthorizedError) => {
   const [tasks, setTasks] = useState([]);  // initialize to an empty list of tasks
 
   // use our helper to get the asynchronous list of tasks from axios, then
@@ -8,14 +8,14 @@ const useTasks = (api, sessionID, onUnauthorizedError) => {
 
   const refreshTasks = useCallback(async () => {
     try {
-      const tasks = await api.getTasksAsync(sessionID);
+      const tasks = await api.getTasksAsync();
       setTasks(tasks);
     } catch (err) {
       console.log(err.message);
       onUnauthorizedError();
       throw err;
     }
-  }, [api, sessionID, onUnauthorizedError]);
+  }, [api, onUnauthorizedError]);
 
   // use our helper to asynchronously update the specified task, then
   // chain a callback to set our tasks state once a successful result is
@@ -32,7 +32,7 @@ const useTasks = (api, sessionID, onUnauthorizedError) => {
 
     // start the async task to toggle the completion
     try {
-      const newTask = await api.updateTaskAsync(id, !task.isComplete, sessionID);
+      const newTask = await api.updateTaskAsync(id, !task.isComplete);
       // use the callback style of updating the tasks list
       // oldTasks will receive the current contents of the tasks state
       setTasks(oldTasks => {
@@ -53,7 +53,7 @@ const useTasks = (api, sessionID, onUnauthorizedError) => {
       onUnauthorizedError();
       throw err;
     }
-  }, [api, tasks, sessionID, onUnauthorizedError]);
+  }, [api, tasks, onUnauthorizedError]);
 
 
   // use our helper to asynchronously delete the specified task, then
@@ -64,7 +64,7 @@ const useTasks = (api, sessionID, onUnauthorizedError) => {
 
   const deleteTask = useCallback(async id => {
     try {
-      await api.deleteTaskAsync(id, sessionID);
+      await api.deleteTaskAsync(id);
       
       // use the callback style of updating the tasks list
       // oldTasks will receive the current contents of the tasks state
@@ -77,11 +77,11 @@ const useTasks = (api, sessionID, onUnauthorizedError) => {
       onUnauthorizedError();
       throw err;
     }
-  }, [api, sessionID, onUnauthorizedError]);
+  }, [api, onUnauthorizedError]);
 
   const addTask = useCallback(async taskData => {
     try {
-      const task = await api.addTaskAsync(taskData, sessionID);
+      const task = await api.addTaskAsync(taskData);
 
       // use the callback style of updating the tasks list
       // oldTasks will receive the current contents of the tasks state
@@ -92,7 +92,7 @@ const useTasks = (api, sessionID, onUnauthorizedError) => {
       onUnauthorizedError();
       throw err;
     }
-  }, [api, sessionID, onUnauthorizedError]);
+  }, [api, onUnauthorizedError]);
 
   return {
     tasks,

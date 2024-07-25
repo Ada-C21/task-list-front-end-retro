@@ -4,8 +4,8 @@ import NewTaskForm from '../components/NewTaskForm';
 import useTasks from '../hooks/useTasks';
 import PropTypes from 'prop-types';
 
-const TasksPage = ({ api, sessionID, onUnauthorizedError }) => {
-  const { tasks, refreshTasks, updateTask, deleteTask, addTask } = useTasks(api, sessionID, onUnauthorizedError);
+const TasksPage = ({ api, onUnauthorizedError }) => {
+  const { tasks, refreshTasks, updateTask, deleteTask, addTask } = useTasks(api, onUnauthorizedError);
 
   // schedule our first refresh to run when the component mounts
   useEffect(() => {
@@ -30,7 +30,6 @@ const TasksPage = ({ api, sessionID, onUnauthorizedError }) => {
 
 TasksPage.propTypes = {
   api: PropTypes.object.isRequired,
-  sessionID: PropTypes.string.isRequired,
   onUnauthorizedError: PropTypes.func.isRequired,
 };
 

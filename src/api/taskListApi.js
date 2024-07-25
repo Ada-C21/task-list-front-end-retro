@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+const axiosInstance = axios.create({
+  withCredentials: true // Ensure credentials are sent with every request
+ });
+ 
 class TaskListApi {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
@@ -30,10 +34,10 @@ class TaskListApi {
   // be sure to return the final promise, so that the component can add additional
   // then/catch clauses to update its state or do any additional error handling
   
-  async getTasksAsync(sessionID) {
+  async getTasksAsync() {
     try {
-      const headers = { 'SessionID': sessionID };
-      const response = await axios.get(`${this.baseUrl}/tasks`, { headers });
+      const response = await axiosInstance.get(`${this.baseUrl}/tasks`);
+      // const response = await axios.get(`${this.baseUrl}/tasks`, { headers });
   
       // convert the received tasks from having python-like keys to JS-like keys
       // using a helper function (TaskListApi.taskApiToJson) that will be run on each task
@@ -54,12 +58,11 @@ class TaskListApi {
   // endpoint to use (since marking complete and incomplete are two different
   // endpoints in task-list).
   
-  async updateTaskAsync(id, markComplete, sessionID) {
+  async updateTaskAsync(id, markComplete) {
     const endpoint = markComplete ? 'mark_complete' : 'mark_incomplete';
     
     try {
-      const headers = { 'SessionID': sessionID };
-      const response = await axios.patch(`${this.baseUrl}/tasks/${id}/${endpoint}`, null, { headers });
+      const response = await axiosInstance.patch(`${this.baseUrl}/tasks/${id}/${endpoint}`, null);
   
       // convert the received task from having python-like keys to JS-like keys
       // using a helper function (TaskListApi.taskApiToJson)
@@ -76,10 +79,9 @@ class TaskListApi {
   // helper function to delete a task. This function makes the asynchronous API
   // call using axios to delete the specified task.
   
-  async deleteTaskAsync(id, sessionID) {
+  async deleteTaskAsync(id) {
     try {
-      const headers = { 'SessionID': sessionID };
-      await axios.delete(`${this.baseUrl}/tasks/${id}`, { headers });
+      await axiosInstance.delete(`${this.baseUrl}/tasks/${id}`);
     } catch (err) {
       console.log(err);
   
@@ -88,7 +90,7 @@ class TaskListApi {
     }
   }
   
-  async addTaskAsync(taskData, sessionID) {
+  async addTaskAsync(taskData) {
     
     // extract values from taskData
     const { title } = taskData;
@@ -101,8 +103,7 @@ class TaskListApi {
     const body = { title, description };
     
     try {
-      const headers = { 'SessionID': sessionID };
-      const response = await axios.post(`${this.baseUrl}/tasks`, body, { headers });
+      const response = await axiosInstance.post(`${this.baseUrl}/tasks`, body);
       
       // convert the received task from having python-like keys to JS-like keys
       // using a helper function (TaskListApi.taskApiToJson)
@@ -125,7 +126,7 @@ class TaskListApi {
     const body = { name, email, password };
   
     try {
-      const response = await axios.post(`${this.baseUrl}/users`, body);
+      const response = await axiosInstance.post(`${this.baseUrl}/users`, body);
   
       // convert the received user from having python-like keys to JS-like keys
       // using a helper function (UserListApi.userApiToJson)
@@ -148,7 +149,7 @@ class TaskListApi {
     const body = { email, password };
   
     try {
-      const response = await axios.post(`${this.baseUrl}/sessions`, body);
+      const response = await axiosInstance.post(`${this.baseUrl}/sessions`, body);
   
       // convert the received user from having python-like keys to JS-like keys
       // using a helper function (UserListApi.userApiToJson)
@@ -162,10 +163,10 @@ class TaskListApi {
     }
   }
 
-  async logoutUserAsync(sessionID) {
+  async logoutUserAsync() {
     try {
-      const headers = { 'SessionID': sessionID };
-      await axios.delete(`${this.baseUrl}/sessions/${sessionID}`, { headers });
+      // await axios.delete(`${this.baseUrl}/sessions/${sessionID}`, { headers });
+      await axiosInstance.delete(`${this.baseUrl}/sessions`);
   
     } catch (err) {
       console.log(err);

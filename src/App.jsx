@@ -20,7 +20,6 @@ const api = new TaskListApi(kBaseUrl);
 const App = () => {
   const [page, setPage] = useStorage(Pages.welcome, 'page');
   const [user, setUser] = useStorage(null, 'user');
-  const [sessionID, setSessionID] = useStorage(null, 'sessionID');
   const [errorMsg, setErrorMsg] = useState('');
 
   const registerUser = async userData => {
@@ -37,7 +36,6 @@ const App = () => {
     try {
       const session = await api.loginUserAsync(loginData);
       setUser(session.user);
-      setSessionID(session.id);
       navigate(Pages.tasks);
     } catch (err) {
       console.log(err.message);
@@ -47,7 +45,8 @@ const App = () => {
 
   const logoutUser = async () => {
     try {
-      await api.logoutUserAsync(sessionID);
+      await api.logoutUserAsync();
+      // await api.logoutUserAsync();
     } catch (err) {
       console.log(err.message);
     }
@@ -63,15 +62,13 @@ const App = () => {
 
   const clearUser = useCallback(() => {
     setUser(null);
-    setSessionID(null);
-  }, [setUser, setSessionID]);
+  }, [setUser]);
 
   const pickPage = (page) => {
     const pages = {
       [Pages.tasks]: {
         builder: () => <TasksPage
           api={api} 
-          sessionID={sessionID}
           onUnauthorizedError={clearUser}
           />,
         requiresUser: true,
@@ -99,7 +96,7 @@ const App = () => {
     const defaultPage = pages[Pages.welcome];
 
     let selectedPage = pages[page] || defaultPage;
-    if (selectedPage.requiresUser && !sessionID) {
+    if (selectedPage.requiresUser && !user) {
       selectedPage = defaultPage;
     }
 
@@ -115,7 +112,7 @@ const App = () => {
       <main>
         { pageComponent }
         {errorMsg && <p className='error'>{errorMsg}</p>}
-        <NavBar navigate={navigate} loggedIn={!!sessionID} />
+        <NavBar navigate={navigate} loggedIn={!!user} />
       </main>
     </div>
   );
